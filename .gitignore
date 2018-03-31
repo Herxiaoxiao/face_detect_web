@@ -1,0 +1,5 @@
+temp/
+face_detect/model/
+face_detect/__pycache__
+*.pyc
+*.jpg

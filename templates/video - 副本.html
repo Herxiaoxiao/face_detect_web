@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HTML5调用电脑摄像头实例</title>
+	<script src = "{{url_for('static',filename = 'jquery-3.3.1.min.js')}}"></script>  
+    <script type="text/javascript">   
+        window.addEventListener("DOMContentLoaded", function() {  
+            // Grab elements, create settings, etc.  
+            var canvas = document.getElementById("canvas"),  
+                context = canvas.getContext("2d"),  
+                video = document.getElementById("video"),  
+                videoObj = { "video": true },  
+                errBack = function(error) {  
+                    console.log("Video capture error: ", error.code);   
+                };  
+				//成功的回调函数
+				success=function(stream){
+					//兼容webkit内核浏览器
+					var CompatibleURL = window.URL || window.webkitURL;
+					//将视频流设置为video元素的源
+					video.src = CompatibleURL.createObjectURL(stream);
+					//播放视频
+					video.play();};
+           
+             
+			if(navigator.mediaDevices.getUserMedia){
+				//最新标准API
+				navigator.mediaDevices.getUserMedia(videoObj).then(success).catch(errBack);
+			} else if (navigator.webkitGetUserMedia){
+				//webkit内核浏览器
+				navigator.webkitGetUserMedia(videoObj).then(success).catch(errBack);
+			} else if (navigator.mozGetUserMedia){
+				//Firefox浏览器
+				navagator.mozGetUserMedia(videoObj).then(success).catch(errBack);
+			} else if (navigator.getUserMedia){
+				//旧版API
+				navigator.getUserMedia(videoObj).then(success).catch(errBack);
+			}
+			
+            // 触发拍照动作  
+            document.getElementById("snap").addEventListener("click", function() {  
+                  context.drawImage(video, 0, 0, 640, 480);
+				var imgData=canvas.toDataURL('image/jpeg', 1);
+				var imgData=imgData.substring(23);
+				$.ajax({
+				    type: "POST",
+				    url: "/image",
+					dataType:'json',
+				    data: {"img":imgData},
+				    success: function(data){
+				    	alert(data);
+						var h1= document.getElementsByTagName("h1")[0];
+						h1.innerHTML = data['msg'];
+				    }
+				});
+            }); 
+ 
+        }, false);   
+    </script>
+</head>
+<body>
+    <video id="video" width="640" height="480" autoplay></video><br>
+    <button id="snap" >点击拍照</button>  <br>
+    <canvas id="canvas" width="640" height="480"></canvas>  
+	<h1></h1>
+</body>
+</html>
