@@ -5,5 +5,4 @@ face_detect/test_dir/*
 !face_detect/test_dir
 face_detect/train_dir/*
 !face_detect/train_dir
-*.pyc
-*.jpg
+
