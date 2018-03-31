@@ -1,5 +1,9 @@
 temp/
 face_detect/model/
 face_detect/__pycache__
+face_detect/test_dir/*
+!face_detect/test_dir
+face_detect/train_dir/*
+!face_detect/train_dir
 *.pyc
 *.jpg
